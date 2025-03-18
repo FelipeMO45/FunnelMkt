@@ -6,6 +6,7 @@ import Register from './auth/Register';
 import Analytics from "./pages/Analytics";
 import CRM from "./pages/CRM";
 import CMS from "./pages/CMS";
+import Profile from "./pages/Profile";
 
 function App() {
   return (
@@ -15,6 +16,7 @@ function App() {
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
+        <Route path="/profile" element={<Profile />} />
         <Route path="analytics" element={<Analytics />} />
           <Route path="crm" element={<CRM />} />
           <Route path="cms" element={<CMS />} />

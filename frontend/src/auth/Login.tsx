@@ -117,7 +117,7 @@ const Login = () => {
               <button
                 type="submit"
                 className="w-full bg-yellow-500 text-white font-semibold py-2 rounded-lg hover:bg-yellow-600"
-                onClick={() => (window.location.href = "/dashboard")}
+                onClick={() => (window.location.href = "/analytics")}
               >
                 Acceder
               </button>

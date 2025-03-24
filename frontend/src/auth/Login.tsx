@@ -125,7 +125,9 @@ const Login = () => {
 
             {/* Registro */}
             <p className="text-sm text-gray-500 text-center mt-4">
-              ¿No tienes una cuenta? <a href="#" className="text-yellow-500 font-semibold">Regístrate</a>
+              ¿No tienes una cuenta? <a href="#" className="text-yellow-500 font-semibold"
+              onClick={() => (window.location.href = "/register")}
+              >Regístrate</a>
             </p>
           </div>
         </div>

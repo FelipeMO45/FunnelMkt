@@ -9,7 +9,7 @@ const Sidebar = () => {
     <aside
       className={`bg-[#192124] text-white flex flex-col p-4 transition-all duration-300 ${
         isOpen ? "w-64" : "w-20"
-      } min-h-screen overflow-y-auto`} // Cambios aplicados aquí
+      } h-screen sticky top-0 overflow-y-auto`} // Cambios clave aquí
       onMouseEnter={() => setIsOpen(true)}
       onMouseLeave={() => setIsOpen(false)}
     >
@@ -21,7 +21,7 @@ const Sidebar = () => {
         <ul className="space-y-4">
           <SidebarItem to="/analytics" icon={<FaChartBar />} label="Analytics" isOpen={isOpen} />
           <SidebarItem to="/crm" icon={<FaUserFriends />} label="CRM" isOpen={isOpen} />
-          <SidebarItem to="/cms" icon={<FaCog />} label="CMS" isOpen={isOpen} />
+          {/* <SidebarItem to="/cms" icon={<FaCog />} label="CMS" isOpen={isOpen} /> */}
         </ul>
       </nav>
     </aside>

@@ -5,28 +5,28 @@ import { FaPlus, FaList, FaHistory, FaColumns, FaChartBar } from "react-icons/fa
 import { DragDropContext, Droppable, Draggable, DropResult } from "react-beautiful-dnd";
 
 type Stage = "Lead" | "Contactado" | "Propuesta enviada" | "Cerrado";
-type Priority = "Alta Prioridad" | "Media" | "Baja" | "Prioridad especial" | "Requiere atención";
+type contactFrecuency = "Alta Prioridad" | "Media" | "Baja" | "Prioridad especial" | "Requiere atención";
 
 
 
 interface Client {
   id: number;
   fullName: string;
-  role: string;
+  position: string;
   email: string;
-  phone: string;
-  companyName: string;
+  phone: number;
+  pymeName: string;
   industry: string;
-  companySize: "1-10" | "11-50" | "51-200";
-  yearsInMarket: number;
+  employees: "1-10" | "11-50" | "51-200";
+  marketYears: number;
   website: string;
-  socialMedia: string;
-  marketingGoals: string;
+  socialNetwork: string;
+  generalGoal: string;
   specificGoals: string;
-  challenges: string;
-  pastMarketingResults: string;
-  priority: Priority;
-  contactChannels: string[];
+  obtacles: string;
+  previousAttempts: string;
+  contactFrecuency: contactFrecuency;
+  contactMediums: string[];
   lastInteraction?: string;
   stage: Stage;
 }
@@ -37,21 +37,21 @@ const CRM: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [formData, setFormData] = useState({
     fullName: "",
-    role: "",
+    position: "",
     email: "",
-    phone: "",
-    companyName: "",
+    phone: 0,
+    pymeName: "",
     industry: "",
-    companySize: "1-10" as "1-10" | "11-50" | "51-200",
-    yearsInMarket: "",
+    employees: "1-10" as "1-10" | "11-50" | "51-200",
+    marketYears: "",
     website: "",
-    socialMedia: "",
-    marketingGoals: "",
+    socialNetwork: "",
+    generalGoal: "",
     specificGoals: "",
-    challenges: "",
-    pastMarketingResults: "",
-    priority: "Media" as Priority,
-    contactChannels: [] as string[],
+    obtacles: "",
+    previousAttempts: "",
+    contactFrecuency: "Media" as contactFrecuency,
+    contactMediums: [] as string[],
   });
 
   const stagesOrder: readonly Stage[] = ["Lead", "Contactado", "Propuesta enviada", "Cerrado"];
@@ -95,41 +95,71 @@ const clientsPerPage = 10;
     const { value, checked } = e.target;
     setFormData(prev => ({
       ...prev,
-      contactChannels: checked
-        ? [...prev.contactChannels, value]
-        : prev.contactChannels.filter(c => c !== value)
+      contactMediums: checked
+        ? [...prev.contactMediums, value]
+        : prev.contactMediums.filter(c => c !== value)
     }));
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    const newClient: Client = {
-      id: Date.now(),
-      ...formData,
-      yearsInMarket: parseInt(formData.yearsInMarket) || 0,
-      contactChannels: formData.contactChannels,
-      lastInteraction: "N/A",
-      stage: "Lead",
+    const { fullName, position, email, phone, pymeName, industry, employees, marketYears, website, socialNetwork, generalGoal, specificGoals, obtacles, previousAttempts } = formData;
+  
+    const newClient = {
+      fullName,
+      position,
+      email,
+      phone,
+      pymeName,
+      industry,
+      employees,
+      marketYears: parseInt(marketYears) || 0,
+      website,
+      socialNetwork,
+      generalGoal,
+      specificGoals,
+      obtacles,
+      previousAttempts,
     };
-    setClients([...clients, newClient]);
-    setFormData({
-      fullName: "",
-      role: "",
-      email: "",
-      phone: "",
-      companyName: "",
-      industry: "",
-      companySize: "1-10",
-      yearsInMarket: "",
-      website: "",
-      socialMedia: "",
-      marketingGoals: "",
-      specificGoals: "",
-      challenges: "",
-      pastMarketingResults: "",
-      priority: "Media",
-      contactChannels: [],
-    });
+  
+    try {
+      const response = await fetch("http://localhost:3000/clients/", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(newClient),
+      });
+  
+      if (!response.ok) {
+        throw new Error("Error al registrar el cliente en la base de datos");
+      }
+  
+      const savedClient = await response.json();
+      setClients([...clients, savedClient]); // Agregar el cliente guardado a la lista local
+      setFormData({
+        fullName: "",
+        position: "",
+        email: "",
+        phone: 0,
+        pymeName: "",
+        industry: "",
+        employees: "1-10",
+        marketYears: "",
+        website: "",
+        socialNetwork: "",
+        generalGoal: "",
+        specificGoals: "",
+        obtacles: "",
+        previousAttempts: "",
+        contactFrecuency: "Media",
+        contactMediums: [],
+      });
+      alert("Cliente registrado exitosamente");
+    } catch (error) {
+      console.error(error);
+      alert("Hubo un error al registrar el cliente. Por favor, inténtalo de nuevo.");
+    }
   };
 
   return (
@@ -176,8 +206,8 @@ const clientsPerPage = 10;
                   />
                   <input
                     type="text"
-                    name="role"
-                    value={formData.role}
+                    name="position"
+                    value={formData.position}
                     onChange={handleInputChange}
                     placeholder="Cargo/Rol en la empresa"
                     className="p-2 border border-gray-300 rounded-lg w-full"
@@ -194,7 +224,7 @@ const clientsPerPage = 10;
                       required
                     />
                     <input
-                      type="tel"
+                      type="number"
                       name="phone"
                       value={formData.phone}
                       onChange={handleInputChange}
@@ -210,8 +240,8 @@ const clientsPerPage = 10;
                   <h2 className="text-xl font-semibold text-gray-800">Información de la empresa</h2>
                   <input
                     type="text"
-                    name="companyName"
-                    value={formData.companyName}
+                    name="pymeName"
+                    value={formData.pymeName}
                     onChange={handleInputChange}
                     placeholder="Nombre de la PYME"
                     className="p-2 border border-gray-300 rounded-lg w-full"
@@ -227,26 +257,26 @@ const clientsPerPage = 10;
                     required
                   />
                   <select
-                    name="companySize"
-                    value={formData.companySize}
+                    name="employees"
+                    value={formData.employees}
                     onChange={handleInputChange}
                     className="p-2 border border-gray-300 rounded-lg w-full"
                   >
-                    <option value="1-10">1-10 empleados</option>
-                    <option value="11-50">11-50 empleados</option>
-                    <option value="51-200">51-200 empleados</option>
+                    <option value="1">1-10 empleados</option>
+                    <option value="2">11-50 empleados</option>
+                    <option value="3">51-200 empleados</option>
                   </select>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <input
                       type="number"
-                      name="yearsInMarket"
-                      value={formData.yearsInMarket}
+                      name="marketYears"
+                      value={formData.marketYears}
                       onChange={handleInputChange}
                       placeholder="Años en el mercado"
                       className="p-2 border border-gray-300 rounded-lg"
                     />
                     <input
-                      type="url"
+                      type="text"
                       name="website"
                       value={formData.website}
                       onChange={handleInputChange}
@@ -256,8 +286,8 @@ const clientsPerPage = 10;
                   </div>
                   <input
                     type="text"
-                    name="socialMedia"
-                    value={formData.socialMedia}
+                    name="socialNetwork"
+                    value={formData.socialNetwork}
                     onChange={handleInputChange}
                     placeholder="Redes sociales"
                     className="p-2 border border-gray-300 rounded-lg w-full"
@@ -268,8 +298,8 @@ const clientsPerPage = 10;
                 <div className="space-y-4 border-b pb-6">
                   <h2 className="text-xl font-semibold text-gray-800">Objetivos de crecimiento</h2>
                   <textarea
-                    name="marketingGoals"
-                    value={formData.marketingGoals}
+                    name="generalGoal"
+                    value={formData.generalGoal}
                     onChange={handleInputChange}
                     placeholder="¿Qué busca lograr con el marketing?"
                     className="p-2 border border-gray-300 rounded-lg w-full h-32"
@@ -287,15 +317,15 @@ const clientsPerPage = 10;
                 <div className="space-y-4 border-b pb-6">
                   <h2 className="text-xl font-semibold text-gray-800">Desafíos actuales</h2>
                   <textarea
-                    name="challenges"
-                    value={formData.challenges}
+                    name="obtacles"
+                    value={formData.obtacles}
                     onChange={handleInputChange}
                     placeholder="Principales obstáculos para crecer"
                     className="p-2 border border-gray-300 rounded-lg w-full h-32"
                   />
                   <textarea
-                    name="pastMarketingResults"
-                    value={formData.pastMarketingResults}
+                    name="previousAttempts"
+                    value={formData.previousAttempts}
                     onChange={handleInputChange}
                     placeholder="Resultados de estrategias anteriores"
                     className="p-2 border border-gray-300 rounded-lg w-full h-32"
@@ -306,16 +336,21 @@ const clientsPerPage = 10;
                 <div className="space-y-4">
                   <h2 className="text-xl font-semibold text-gray-800">Frecuencia de contacto</h2>
                   <select
-                    name="priority"
-                    value={formData.priority}
+                    name="contactFrecuency"
+                    value={formData.contactFrecuency}
                     onChange={handleInputChange}
                     className="p-2 border border-gray-300 rounded-lg w-full"
                   >
-                    <option value="Alta Prioridad">🔴 Alta Prioridad</option>
+                    {/* <option value="Alta Prioridad">🔴 Alta Prioridad</option>
                     <option value="Media">🟡 Media</option>
                     <option value="Baja">🟢 Baja</option>
                     <option value="Prioridad especial">🟣 Prioridad especial</option>
-                    <option value="Requiere atención">⚫ Requiere atención</option>
+                    <option value="Requiere atención">⚫ Requiere atención</option> */}
+                    <option value="1">🔴 Alta Prioridad</option>
+                    <option value="2">🟡 Media</option>
+                    <option value="3">🟢 Baja</option>
+                    <option value="4">🟣 Prioridad especial</option>
+                    <option value="5">⚫ Requiere atención</option>
                   </select>
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
                     {['Email', 'WhatsApp', 'Llamadas'].map((channel) => (
@@ -323,7 +358,7 @@ const clientsPerPage = 10;
                         <input
                           type="checkbox"
                           value={channel}
-                          checked={formData.contactChannels.includes(channel)}
+                          checked={formData.contactMediums.includes(channel)}
                           onChange={handleCheckboxChange}
                           className="form-checkbox h-4 w-4 text-blue-500"
                         />
@@ -362,7 +397,7 @@ const clientsPerPage = 10;
     <div className="divide-y divide-gray-200">
       {clients
         .filter(client =>
-          client.companyName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          client.pymeName.toLowerCase().includes(searchTerm.toLowerCase()) ||
           client.fullName.toLowerCase().includes(searchTerm.toLowerCase()) ||
           client.industry.toLowerCase().includes(searchTerm.toLowerCase())
         )
@@ -374,12 +409,12 @@ const clientsPerPage = 10;
               <div className="col-span-4">
                 <div className="flex items-center gap-2">
                   <span className={`inline-block w-2 h-2 rounded-full ${
-                    client.priority === "Alta Prioridad" ? "bg-red-500" :
-                    client.priority === "Media" ? "bg-yellow-500" :
-                    client.priority === "Baja" ? "bg-green-500" :
+                    client.contactFrecuency === "Alta Prioridad" ? "bg-red-500" :
+                    client.contactFrecuency === "Media" ? "bg-yellow-500" :
+                    client.contactFrecuency === "Baja" ? "bg-green-500" :
                     "bg-purple-500"
                   }`}></span>
-                  <h3 className="text-sm font-semibold truncate">{client.companyName}</h3>
+                  <h3 className="text-sm font-semibold truncate">{client.pymeName}</h3>
                 </div>
                 <p className="text-xs text-gray-500 truncate">{client.industry}</p>
               </div>
@@ -387,17 +422,17 @@ const clientsPerPage = 10;
               {/* Columna 2: Contacto */}
               <div className="col-span-3">
                 <p className="text-sm truncate">{client.fullName}</p>
-                <p className="text-xs text-gray-500 truncate">{client.role}</p>
+                <p className="text-xs text-gray-500 truncate">{client.position}</p>
               </div>
 
               {/* Columna 3: Detalles */}
               <div className="col-span-3">
                 <div className="flex gap-2 text-xs">
                   <span className="px-1.5 py-0.5 bg-blue-100 text-blue-800 rounded-full">
-                    {client.companySize} empleados
+                    {client.employees} empleados
                   </span>
                   <span className="px-1.5 py-0.5 bg-green-100 text-green-800 rounded-full">
-                    {client.yearsInMarket} años
+                    {client.marketYears} años
                   </span>
                 </div>
               </div>
@@ -422,7 +457,7 @@ const clientsPerPage = 10;
         {/* Encabezado */}
         <div className="flex justify-between items-center mb-6 border-b pb-4">
           <div>
-            <h2 className="text-3xl font-bold text-gray-800">{selectedClient.companyName}</h2>
+            <h2 className="text-3xl font-bold text-gray-800">{selectedClient.pymeName}</h2>
             <p className="text-sm text-gray-500 mt-1">{selectedClient.industry}</p>
           </div>
           <button
@@ -446,7 +481,7 @@ const clientsPerPage = 10;
                 </div>
                 <div>
                   <dt className="font-medium text-gray-600">Cargo</dt>
-                  <dd className="text-gray-900">{selectedClient.role}</dd>
+                  <dd className="text-gray-900">{selectedClient.position}</dd>
                 </div>
                 <div>
                   <dt className="font-medium text-gray-600">Contacto</dt>
@@ -456,7 +491,7 @@ const clientsPerPage = 10;
                 <div>
                   <dt className="font-medium text-gray-600">Canales preferidos</dt>
                   <dd className="text-gray-900">
-                    {selectedClient.contactChannels.join(', ') || 'No especificado'}
+                    {selectedClient.contactMediums.join(', ') || 'No especificado'}
                   </dd>
                 </div>
               </dl>
@@ -469,7 +504,7 @@ const clientsPerPage = 10;
                 <div>
                   <h4 className="font-medium text-gray-600">Objetivos principales</h4>
                   <p className="text-gray-900 whitespace-pre-line">
-                    {selectedClient.marketingGoals || 'No especificado'}
+                    {selectedClient.generalGoal || 'No especificado'}
                   </p>
                 </div>
                 <div>
@@ -489,11 +524,11 @@ const clientsPerPage = 10;
               <dl className="space-y-2">
                 <div>
                   <dt className="font-medium text-gray-600">Tamaño</dt>
-                  <dd className="text-gray-900">{selectedClient.companySize} empleados</dd>
+                  <dd className="text-gray-900">{selectedClient.employees} empleados</dd>
                 </div>
                 <div>
                   <dt className="font-medium text-gray-600">Antigüedad</dt>
-                  <dd className="text-gray-900">{selectedClient.yearsInMarket} años</dd>
+                  <dd className="text-gray-900">{selectedClient.marketYears} años</dd>
                 </div>
                 <div>
                   <dt className="font-medium text-gray-600">Sitio web</dt>
@@ -504,7 +539,7 @@ const clientsPerPage = 10;
                 <div>
                   <dt className="font-medium text-gray-600">Redes sociales</dt>
                   <dd className="text-gray-900">
-                    {selectedClient.socialMedia || 'No especificado'}
+                    {selectedClient.socialNetwork || 'No especificado'}
                   </dd>
                 </div>
               </dl>
@@ -517,13 +552,13 @@ const clientsPerPage = 10;
                 <div>
                   <h4 className="font-medium text-gray-600">Dificultades actuales</h4>
                   <p className="text-gray-900 whitespace-pre-line">
-                    {selectedClient.challenges || 'No especificado'}
+                    {selectedClient.obtacles || 'No especificado'}
                   </p>
                 </div>
                 <div>
                   <h4 className="font-medium text-gray-600">Resultados anteriores</h4>
                   <p className="text-gray-900 whitespace-pre-line">
-                    {selectedClient.pastMarketingResults || 'No especificado'}
+                    {selectedClient.previousAttempts || 'No especificado'}
                   </p>
                 </div>
               </div>
@@ -581,12 +616,12 @@ const clientsPerPage = 10;
                     client.lastInteraction && client.lastInteraction !== "N/A" && (
                       <div key={`${client.id}-interaction`} className="p-4 border rounded-lg">
                         <div className="flex justify-between items-center">
-                          <h3 className="font-semibold">{client.companyName}</h3>
+                          <h3 className="font-semibold">{client.pymeName}</h3>
                           <span className="text-sm text-gray-500">{client.lastInteraction}</span>
                         </div>
                         <div className="mt-2 text-gray-600">
-                          <p>📞 {client.contactChannels.join(", ")}</p>
-                          <p>📝 Notas: {client.pastMarketingResults || "Sin notas"}</p>
+                          <p>📞 {client.contactMediums.join(", ")}</p>
+                          <p>📝 Notas: {client.previousAttempts || "Sin notas"}</p>
                         </div>
                       </div>
                     )
@@ -623,16 +658,16 @@ const clientsPerPage = 10;
                                     {...provided.dragHandleProps}
                                     className="bg-white p-2 rounded-lg shadow mt-2"
                                   >
-                                    <h3 className="font-semibold">{client.companyName}</h3>
+                                    <h3 className="font-semibold">{client.pymeName}</h3>
                                     <p className="text-sm text-gray-500">{client.fullName}</p>
                                     <span className={`text-xs px-1 py-0.5 rounded ${
-                                      client.priority === "Alta Prioridad"
+                                      client.contactFrecuency === "Alta Prioridad"
                                         ? "bg-red-100 text-red-800"
-                                        : client.priority === "Media"
+                                        : client.contactFrecuency === "Media"
                                         ? "bg-yellow-100 text-yellow-800"
                                         : "bg-green-100 text-green-800"
                                     }`}>
-                                      {client.priority}
+                                      {client.contactFrecuency}
                                     </span>
                                   </div>
                                 )}
@@ -651,20 +686,20 @@ const clientsPerPage = 10;
             {activeTab === 4 && (
               <div className="bg-white p-6 rounded-lg shadow">
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                  {['Alta Prioridad', 'Media', 'Baja', 'Prioridad especial', 'Requiere atención'].map((priority) => (
-                    <div key={priority} className="p-4 border rounded-lg">
+                  {['Alta Prioridad', 'Media', 'Baja', 'Prioridad especial', 'Requiere atención'].map((contactFrecuency) => (
+                    <div key={contactFrecuency} className="p-4 border rounded-lg">
                       <h3 className="font-semibold flex items-center gap-2">
                         <span className={`inline-block w-3 h-3 rounded-full ${
-                          priority === 'Alta Prioridad' ? 'bg-red-500' :
-                          priority === 'Media' ? 'bg-yellow-500' :
-                          priority === 'Baja' ? 'bg-green-500' :
-                          priority === 'Prioridad especial' ?
+                          contactFrecuency === 'Alta Prioridad' ? 'bg-red-500' :
+                          contactFrecuency === 'Media' ? 'bg-yellow-500' :
+                          contactFrecuency === 'Baja' ? 'bg-green-500' :
+                          contactFrecuency === 'Prioridad especial' ?
                           'bg-purple-500' : 'bg-gray-800'
                         }`}></span>
-                        {priority}
+                        {contactFrecuency}
                       </h3>
                       <p className="text-2xl font-bold mt-2">
-                        {clients.filter(c => c.priority === priority).length}
+                        {clients.filter(c => c.contactFrecuency === contactFrecuency).length}
                       </p>
                     </div>
                   ))}
@@ -688,7 +723,7 @@ const clientsPerPage = 10;
                     <ul className="mt-2 space-y-2">
                       {clients.slice(-3).map(client => (
                         <li key={client.id} className="flex justify-between items-center">
-                          <span>{client.companyName}</span>
+                          <span>{client.pymeName}</span>
                           <span className={`text-xs px-2 py-1 rounded ${
                             client.stage === "Lead" ? "bg-blue-100 text-blue-800" :
                             client.stage === "Contactado" ? "bg-yellow-100 text-yellow-800" :
@@ -709,19 +744,19 @@ const clientsPerPage = 10;
                     <div className="p-3 bg-blue-50 rounded-lg">
                       <p className="text-sm text-blue-600">Objetivos Comunes</p>
                       <p className="font-medium mt-1">
-                        {clients.filter(c => c.marketingGoals.includes("ventas")).length} buscan aumentar ventas
+                        {clients.filter(c => c.generalGoal.includes("ventas")).length} buscan aumentar ventas
                       </p>
                     </div>
                     <div className="p-3 bg-green-50 rounded-lg">
                       <p className="text-sm text-green-600">Principales Desafíos</p>
                       <p className="font-medium mt-1">
-                        {clients.filter(c => c.challenges.includes("visibilidad")).length} con problemas de visibilidad
+                        {clients.filter(c => c.obtacles.includes("visibilidad")).length} con problemas de visibilidad
                       </p>
                     </div>
                     <div className="p-3 bg-purple-50 rounded-lg">
                       <p className="text-sm text-purple-600">Canales Preferidos</p>
                       <p className="font-medium mt-1">
-                        {clients.filter(c => c.contactChannels.includes("WhatsApp")).length} prefieren WhatsApp
+                        {clients.filter(c => c.contactMediums.includes("WhatsApp")).length} prefieren WhatsApp
                       </p>
                     </div>
                   </div>

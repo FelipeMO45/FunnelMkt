@@ -47,6 +47,8 @@ const CRM: React.FC = () => {
   const [activeTab, setActiveTab] = useState(0);
   const [clients, setClients] = useState<Client[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
+  const [contactMediumError, setContactMediumError] = useState(false);
+
   const [formData, setFormData] = useState({
     fullName: "",
     position: "",
@@ -73,11 +75,11 @@ const CRM: React.FC = () => {
   const clientsPerPage = 10;
 
   const tabs = [
+    { label: "Estado del Cliente", icon: <FaChartBar /> },
     { label: "Agregar Cliente", icon: <FaPlus /> },
     { label: "Lista de Clientes", icon: <FaList /> },
     { label: "Interacciones", icon: <FaHistory /> },
-    { label: "Pipeline", icon: <FaColumns /> },
-    { label: "Estado del Cliente", icon: <FaChartBar /> },
+
   ];
 
   const sensors = useSensors(
@@ -128,6 +130,13 @@ const CRM: React.FC = () => {
     e.preventDefault();
     const { fullName, position, email, phone, pymeName, industry, employees, marketYears, website, socialNetwork, generalGoal, specificGoals, obtacles, previousAttempts } = formData;
 
+    if (formData.contactMediums.length === 0) {
+      setContactMediumError(true);
+      return;
+    }
+
+    setContactMediumError(false);
+    
     const newClient = {
       fullName,
       position,
@@ -157,6 +166,7 @@ const CRM: React.FC = () => {
       if (!response.ok) {
         throw new Error("Error al registrar el cliente en la base de datos");
       }
+
 
       const savedClient = await response.json();
       setClients([...clients, savedClient]); // Agregar el cliente guardado a la lista local
@@ -212,7 +222,7 @@ const CRM: React.FC = () => {
           {/* Contenido de las pestañas */}
           <div className="mt-4">
             {/* Agregar Cliente */}
-            {activeTab === 0 && (
+            {activeTab === 1 && (
               <form onSubmit={handleSubmit} className="space-y-6">
                 {/* Grid 2x2 */}
                 <div className="grid md:grid-cols-2 md:grid-rows-2 gap-8">
@@ -389,6 +399,13 @@ const CRM: React.FC = () => {
                     ))}
                   </div>
 
+                  {contactMediumError && (
+                    <p className="text-red-500 text-sm mt-1">
+                      Selecciona al menos un medio de contacto.
+                    </p>
+                  )}
+
+
                   <p className="text-sm text-gray-500 mt-2">
                     Contact mediums seleccionados: {JSON.stringify(formData.contactMediums)}
                   </p>
@@ -409,7 +426,7 @@ const CRM: React.FC = () => {
             )}
 
             {/* Lista de Clientes con buscador */}
-            {activeTab === 1 && (
+            {activeTab === 2 && (
               <div className="bg-white rounded-lg shadow">
                 <div className="p-4 border-b">
                   <input
@@ -638,7 +655,7 @@ const CRM: React.FC = () => {
               </div>
             )}
             {/* Interacciones */}
-            {activeTab === 2 && (
+            {activeTab === 3 && (
               <div className="bg-white p-6 rounded-lg shadow">
                 <h2 className="text-xl font-semibold mb-4">Historial de Interacciones</h2>
                 <div className="space-y-4">
@@ -660,7 +677,7 @@ const CRM: React.FC = () => {
               </div>
             )}
 
-            {/* Pipeline Kanban */}
+            {/* Pipeline Kanban
             {activeTab === 3 && (
               <DragDropContext onDragEnd={handleDragEnd}>
                 <div className="grid grid-cols-4 gap-4">
@@ -709,10 +726,10 @@ const CRM: React.FC = () => {
                   ))}
                 </div>
               </DragDropContext>
-            )}
+            )} */}
 
             {/* Estado del Cliente */}
-            {activeTab === 4 && (
+            {activeTab === 0 && (
               <div className="bg-white p-6 rounded-lg shadow">
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                   {['Alta Prioridad', 'Media', 'Baja', 'Prioridad especial', 'Requiere atención'].map((contactFrecuency) => (

@@ -19,7 +19,7 @@ import {
 import { restrictToVerticalAxis } from '@dnd-kit/modifiers';
 
 type Stage = "Lead" | "Contactado" | "Propuesta enviada" | "Cerrado";
-type contactFrecuency = "Alta Prioridad" | "Media" | "Baja" | "Prioridad especial" | "Requiere atención";
+type ContactFrecuency = 1 | 2 | 3 | 4 | 5;
 
 interface Client {
   id: number;
@@ -37,11 +37,12 @@ interface Client {
   specificGoals: string;
   obtacles: string;
   previousAttempts: string;
-  contactFrecuency: contactFrecuency;
+  contactFrecuency: ContactFrecuency; // Ahora es numérico
   contactMediums: string[];
   lastInteraction?: string;
   stage: Stage;
 }
+
 
 const CRM: React.FC = () => {
   const [activeTab, setActiveTab] = useState(0);
@@ -64,11 +65,12 @@ const CRM: React.FC = () => {
     specificGoals: "",
     obtacles: "",
     previousAttempts: "",
-    contactFrecuency: "Media" as contactFrecuency,
+    contactFrecuency: 2 as ContactFrecuency, // Por ejemplo, 2 equivale a "Media"
     contactMediums: [] as number[],
   });
 
-  const stagesOrder: readonly Stage[] = ["Lead", "Contactado", "Propuesta enviada", "Cerrado"];
+
+  // const stagesOrder: readonly Stage[] = ["Lead", "Contactado", "Propuesta enviada", "Cerrado"];
   const [selectedClient, setSelectedClient] = useState<Client | null>(null);
 
   const [currentPage, setCurrentPage] = useState(1);
@@ -109,8 +111,12 @@ const CRM: React.FC = () => {
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
+    setFormData(prev => ({
+      ...prev,
+      [name]: name === "contactFrecuency" ? parseInt(value) : value
+    }));
   };
+
 
   const handleCheckboxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = parseInt(e.target.value);
@@ -128,7 +134,7 @@ const CRM: React.FC = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    const { fullName, position, email, phone, pymeName, industry, employees, marketYears, website, socialNetwork, generalGoal, specificGoals, obtacles, previousAttempts } = formData;
+    const { fullName, position, email, phone, pymeName, industry, employees, marketYears, website, socialNetwork, generalGoal, specificGoals, obtacles, previousAttempts, contactFrecuency } = formData;
 
     if (formData.contactMediums.length === 0) {
       setContactMediumError(true);
@@ -145,13 +151,14 @@ const CRM: React.FC = () => {
       pymeName,
       industry,
       employees,
-      marketYears: parseInt(marketYears) || 0,
+      marketYears: parseInt(marketYears) || 0, // si este campo continúa siendo numérico
       website,
       socialNetwork,
       generalGoal,
       specificGoals,
       obtacles,
       previousAttempts,
+      contactFrecuency, // Ahora se envía como número
     };
 
     try {
@@ -166,7 +173,6 @@ const CRM: React.FC = () => {
       if (!response.ok) {
         throw new Error("Error al registrar el cliente en la base de datos");
       }
-
 
       const savedClient = await response.json();
       setClients([...clients, savedClient]); // Agregar el cliente guardado a la lista local
@@ -185,7 +191,7 @@ const CRM: React.FC = () => {
         specificGoals: "",
         obtacles: "",
         previousAttempts: "",
-        contactFrecuency: "Media",
+        contactFrecuency: 2 as ContactFrecuency, // Reiniciamos con el valor por defecto
         contactMediums: [] as number[],
       });
       alert("Cliente registrado exitosamente");
@@ -194,6 +200,7 @@ const CRM: React.FC = () => {
       alert("Hubo un error al registrar el cliente. Por favor, inténtalo de nuevo.");
     }
   };
+
 
   return (
     <div className="flex min-h-screen bg-gray-100">
@@ -377,11 +384,11 @@ const CRM: React.FC = () => {
                     onChange={handleInputChange}
                     className="p-2 border border-gray-300 rounded-lg w-full"
                   >
-                    <option value="1">🔴 Alta Prioridad</option>
-                    <option value="2">🟡 Media</option>
-                    <option value="3">🟢 Baja</option>
-                    <option value="4">🟣 Prioridad especial</option>
-                    <option value="5">⚫ Requiere atención</option>
+                    <option value={1}>🔴 Alta Prioridad</option>
+                    <option value={2}>🟡 Media</option>
+                    <option value={3}>🟢 Baja</option>
+                    <option value={4}>🟣 Prioridad especial</option>
+                    <option value={5}>⚫ Requiere atención</option>
                   </select>
 
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">

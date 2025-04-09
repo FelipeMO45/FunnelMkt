@@ -199,8 +199,8 @@ const CRM: React.FC = () => {
               <button
                 key={index}
                 className={`flex items-center gap-2 py-2 px-4 text-sm font-semibold transition-all ${activeTab === index
-                    ? "border-b-2 border-blue-500 text-blue-600"
-                    : "text-gray-500 hover:text-gray-800"
+                  ? "border-b-2 border-blue-500 text-blue-600"
+                  : "text-gray-500 hover:text-gray-800"
                   }`}
                 onClick={() => handleTabChange(index)}
               >
@@ -213,167 +213,167 @@ const CRM: React.FC = () => {
           <div className="mt-4">
             {/* Agregar Cliente */}
             {activeTab === 0 && (
-              <form onSubmit={handleSubmit} className="bg-white p-6 rounded-lg shadow space-y-6">
-                {/* Sección 1: Datos del contacto principal */}
-                <div className="space-y-4 border-b pb-6">
-                  <h2 className="text-xl font-semibold text-gray-800">Datos del contacto principal</h2>
-                  <input
-                    type="text"
-                    name="fullName"
-                    value={formData.fullName}
-                    onChange={handleInputChange}
-                    placeholder="Nombre completo"
-                    className="p-2 border border-gray-300 rounded-lg w-full"
-                    required
-                  />
-                  <input
-                    type="text"
-                    name="position"
-                    value={formData.position}
-                    onChange={handleInputChange}
-                    placeholder="Cargo/Rol en la empresa"
-                    className="p-2 border border-gray-300 rounded-lg w-full"
-                    required
-                  />
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <form onSubmit={handleSubmit} className="space-y-6">
+                {/* Grid 2x2 */}
+                <div className="grid md:grid-cols-2 md:grid-rows-2 gap-8">
+
+                  {/* Arriba izquierda: Datos del contacto */}
+                  <div className="space-y-4 border-b pb-4">
+                    <h2 className="text-lg font-semibold text-gray-800">Datos del contacto principal</h2>
                     <input
-                      type="email"
-                      name="email"
-                      value={formData.email}
+                      type="text"
+                      name="fullName"
+                      value={formData.fullName}
                       onChange={handleInputChange}
-                      placeholder="Email"
-                      className="p-2 border border-gray-300 rounded-lg"
+                      placeholder="Nombre completo"
+                      className="p-2 border border-gray-300 rounded-lg w-full"
                       required
                     />
                     <input
                       type="text"
-                      name="phone"
-                      value={formData.phone}
+                      name="position"
+                      value={formData.position}
                       onChange={handleInputChange}
-                      placeholder="Teléfono"
-                      className="p-2 border border-gray-300 rounded-lg"
+                      placeholder="Cargo/Rol en la empresa"
+                      className="p-2 border border-gray-300 rounded-lg w-full"
                       required
                     />
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <input
+                        type="email"
+                        name="email"
+                        value={formData.email}
+                        onChange={handleInputChange}
+                        placeholder="Email"
+                        className="p-2 border border-gray-300 rounded-lg"
+                        required
+                      />
+                      <input
+                        type="text"
+                        name="phone"
+                        value={formData.phone}
+                        onChange={handleInputChange}
+                        placeholder="Teléfono"
+                        className="p-2 border border-gray-300 rounded-lg"
+                        required
+                      />
+                    </div>
                   </div>
-                </div>
 
-                {/* Sección 2: Información de la empresa */}
-                <div className="space-y-4 border-b pb-6">
-                  <h2 className="text-xl font-semibold text-gray-800">Información de la empresa</h2>
-                  <input
-                    type="text"
-                    name="pymeName"
-                    value={formData.pymeName}
-                    onChange={handleInputChange}
-                    placeholder="Nombre de la PYME"
-                    className="p-2 border border-gray-300 rounded-lg w-full"
-                    required
-                  />
-                  <input
-                    type="text"
-                    name="industry"
-                    value={formData.industry}
-                    onChange={handleInputChange}
-                    placeholder="Industria/sector"
-                    className="p-2 border border-gray-300 rounded-lg w-full"
-                    required
-                  />
-                  <select
-                    name="employees"
-                    value={formData.employees}
-                    onChange={handleInputChange}
-                    className="p-2 border border-gray-300 rounded-lg w-full"
-                  >
-                    <option value="1">1-10 empleados</option>
-                    <option value="2">11-50 empleados</option>
-                    <option value="3">51-200 empleados</option>
-                  </select>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  {/* Arriba derecha: Empresa */}
+                  <div className="space-y-4 border-b pb-4">
+                    <h2 className="text-lg font-semibold text-gray-800">Información de la empresa</h2>
                     <input
-                      type="number"
-                      name="marketYears"
-                      value={formData.marketYears}
+                      type="text"
+                      name="pymeName"
+                      value={formData.pymeName}
                       onChange={handleInputChange}
-                      placeholder="Años en el mercado"
-                      className="p-2 border border-gray-300 rounded-lg"
+                      placeholder="Nombre de la PYME"
+                      className="p-2 border border-gray-300 rounded-lg w-full"
+                      required
                     />
                     <input
                       type="text"
-                      name="website"
-                      value={formData.website}
+                      name="industry"
+                      value={formData.industry}
                       onChange={handleInputChange}
-                      placeholder="Sitio web"
-                      className="p-2 border border-gray-300 rounded-lg"
+                      placeholder="Industria/sector"
+                      className="p-2 border border-gray-300 rounded-lg w-full"
+                      required
+                    />
+                    <select
+                      name="employees"
+                      value={formData.employees}
+                      onChange={handleInputChange}
+                      className="p-2 border border-gray-300 rounded-lg w-full"
+                    >
+                      <option value="1">1-10 empleados</option>
+                      <option value="2">11-50 empleados</option>
+                      <option value="3">51-200 empleados</option>
+                    </select>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <input
+                        type="number"
+                        name="marketYears"
+                        value={formData.marketYears}
+                        onChange={handleInputChange}
+                        placeholder="Años en el mercado"
+                        className="p-2 border border-gray-300 rounded-lg"
+                      />
+                      <input
+                        type="text"
+                        name="website"
+                        value={formData.website}
+                        onChange={handleInputChange}
+                        placeholder="Sitio web"
+                        className="p-2 border border-gray-300 rounded-lg"
+                      />
+                    </div>
+                    <input
+                      type="text"
+                      name="socialNetwork"
+                      value={formData.socialNetwork}
+                      onChange={handleInputChange}
+                      placeholder="Redes sociales"
+                      className="p-2 border border-gray-300 rounded-lg w-full"
                     />
                   </div>
-                  <input
-                    type="text"
-                    name="socialNetwork"
-                    value={formData.socialNetwork}
-                    onChange={handleInputChange}
-                    placeholder="Redes sociales"
-                    className="p-2 border border-gray-300 rounded-lg w-full"
-                  />
+
+                  {/* Abajo izquierda: Objetivos */}
+                  <div className="space-y-4 border-b pb-4">
+                    <h2 className="text-lg font-semibold text-gray-800">Objetivos de crecimiento</h2>
+                    <textarea
+                      name="generalGoal"
+                      value={formData.generalGoal}
+                      onChange={handleInputChange}
+                      placeholder="¿Qué busca lograr con el marketing?"
+                      className="p-2 border border-gray-300 rounded-lg w-full h-24"
+                    />
+                    <textarea
+                      name="specificGoals"
+                      value={formData.specificGoals}
+                      onChange={handleInputChange}
+                      placeholder="Metas específicas"
+                      className="p-2 border border-gray-300 rounded-lg w-full h-24"
+                    />
+                  </div>
+
+                  {/* Abajo derecha: Desafíos */}
+                  <div className="space-y-4 border-b pb-4">
+                    <h2 className="text-lg font-semibold text-gray-800">Desafíos actuales</h2>
+                    <textarea
+                      name="obtacles"
+                      value={formData.obtacles}
+                      onChange={handleInputChange}
+                      placeholder="Principales obstáculos para crecer"
+                      className="p-2 border border-gray-300 rounded-lg w-full h-24"
+                    />
+                    <textarea
+                      name="previousAttempts"
+                      value={formData.previousAttempts}
+                      onChange={handleInputChange}
+                      placeholder="Resultados de estrategias anteriores"
+                      className="p-2 border border-gray-300 rounded-lg w-full h-24"
+                    />
+                  </div>
                 </div>
 
-                {/* Sección 3: Objetivos de crecimiento */}
-                <div className="space-y-4 border-b pb-6">
-                  <h2 className="text-xl font-semibold text-gray-800">Objetivos de crecimiento</h2>
-                  <textarea
-                    name="generalGoal"
-                    value={formData.generalGoal}
-                    onChange={handleInputChange}
-                    placeholder="¿Qué busca lograr con el marketing?"
-                    className="p-2 border border-gray-300 rounded-lg w-full h-32"
-                  />
-                  <textarea
-                    name="specificGoals"
-                    value={formData.specificGoals}
-                    onChange={handleInputChange}
-                    placeholder="Metas específicas"
-                    className="p-2 border border-gray-300 rounded-lg w-full h-32"
-                  />
-                </div>
-
-                {/* Sección 4: Desafíos actuales */}
-                <div className="space-y-4 border-b pb-6">
-                  <h2 className="text-xl font-semibold text-gray-800">Desafíos actuales</h2>
-                  <textarea
-                    name="obtacles"
-                    value={formData.obtacles}
-                    onChange={handleInputChange}
-                    placeholder="Principales obstáculos para crecer"
-                    className="p-2 border border-gray-300 rounded-lg w-full h-32"
-                  />
-                  <textarea
-                    name="previousAttempts"
-                    value={formData.previousAttempts}
-                    onChange={handleInputChange}
-                    placeholder="Resultados de estrategias anteriores"
-                    className="p-2 border border-gray-300 rounded-lg w-full h-32"
-                  />
-                </div>
-
-                {/* Sección 5: Frecuencia de contacto */}
-                <div className="space-y-4">
-                  <h2 className="text-xl font-semibold text-gray-800">Frecuencia de contacto</h2>
+                {/* Frecuencia y botón */}
+                <div className="space-y-4 border-t pt-6">
+                  <h2 className="text-lg font-semibold text-gray-800">Frecuencia de contacto</h2>
                   <select
                     name="contactFrecuency"
                     value={formData.contactFrecuency}
                     onChange={handleInputChange}
                     className="p-2 border border-gray-300 rounded-lg w-full"
                   >
-                    {/* <option value="Alta Prioridad">🔴 Alta Prioridad</option>
-                    <option value="Media">🟡 Media</option>
-                    <option value="Baja">🟢 Baja</option>
-                    <option value="Prioridad especial">🟣 Prioridad especial</option>
-                    <option value="Requiere atención">⚫ Requiere atención</option> */}
                     <option value="1">🔴 Alta Prioridad</option>
                     <option value="2">🟡 Media</option>
                     <option value="3">🟢 Baja</option>
                     <option value="4">🟣 Prioridad especial</option>
                     <option value="5">⚫ Requiere atención</option>
                   </select>
+
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
                     {['Email', 'WhatsApp', 'Llamadas'].map((channel, index) => (
                       <label key={index} className="flex items-center gap-2">
@@ -388,18 +388,24 @@ const CRM: React.FC = () => {
                       </label>
                     ))}
                   </div>
-                </div>
-                <p className="text-sm text-gray-500 mt-2">
-                  Contact mediums seleccionados: {JSON.stringify(formData.contactMediums)}
-                </p>
 
-                <button
-                  type="submit"
-                  className="bg-blue-500 text-white py-3 px-6 rounded-lg hover:bg-blue-600 transition-colors w-full mt-6"
-                >
-                  Guardar Cliente
-                </button>
+                  <p className="text-sm text-gray-500 mt-2">
+                    Contact mediums seleccionados: {JSON.stringify(formData.contactMediums)}
+                  </p>
+
+                  <div className="flex justify-end mt-4">
+                    <button
+                      type="submit"
+                      className="bg-blue-500 text-white py-3 px-6 rounded-lg hover:bg-blue-600 transition-colors"
+                    >
+                      Guardar Cliente
+                    </button>
+                  </div>
+
+                </div>
               </form>
+
+
             )}
 
             {/* Lista de Clientes con buscador */}
@@ -434,9 +440,9 @@ const CRM: React.FC = () => {
                           <div className="col-span-4">
                             <div className="flex items-center gap-2">
                               <span className={`inline-block w-2 h-2 rounded-full ${client.contactFrecuency === "Alta Prioridad" ? "bg-red-500" :
-                                  client.contactFrecuency === "Media" ? "bg-yellow-500" :
-                                    client.contactFrecuency === "Baja" ? "bg-green-500" :
-                                      "bg-purple-500"
+                                client.contactFrecuency === "Media" ? "bg-yellow-500" :
+                                  client.contactFrecuency === "Baja" ? "bg-green-500" :
+                                    "bg-purple-500"
                                 }`}></span>
                               <h3 className="text-sm font-semibold truncate">{client.pymeName}</h3>
                             </div>
@@ -685,10 +691,10 @@ const CRM: React.FC = () => {
                                     <h3 className="font-semibold">{client.pymeName}</h3>
                                     <p className="text-sm text-gray-500">{client.fullName}</p>
                                     <span className={`text-xs px-1 py-0.5 rounded ${client.contactFrecuency === "Alta Prioridad"
-                                        ? "bg-red-100 text-red-800"
-                                        : client.contactFrecuency === "Media"
-                                          ? "bg-yellow-100 text-yellow-800"
-                                          : "bg-green-100 text-green-800"
+                                      ? "bg-red-100 text-red-800"
+                                      : client.contactFrecuency === "Media"
+                                        ? "bg-yellow-100 text-yellow-800"
+                                        : "bg-green-100 text-green-800"
                                       }`}>
                                       {client.contactFrecuency}
                                     </span>
@@ -713,10 +719,10 @@ const CRM: React.FC = () => {
                     <div key={contactFrecuency} className="p-4 border rounded-lg">
                       <h3 className="font-semibold flex items-center gap-2">
                         <span className={`inline-block w-3 h-3 rounded-full ${contactFrecuency === 'Alta Prioridad' ? 'bg-red-500' :
-                            contactFrecuency === 'Media' ? 'bg-yellow-500' :
-                              contactFrecuency === 'Baja' ? 'bg-green-500' :
-                                contactFrecuency === 'Prioridad especial' ?
-                                  'bg-purple-500' : 'bg-gray-800'
+                          contactFrecuency === 'Media' ? 'bg-yellow-500' :
+                            contactFrecuency === 'Baja' ? 'bg-green-500' :
+                              contactFrecuency === 'Prioridad especial' ?
+                                'bg-purple-500' : 'bg-gray-800'
                           }`}></span>
                         {contactFrecuency}
                       </h3>
@@ -747,9 +753,9 @@ const CRM: React.FC = () => {
                         <li key={client.id} className="flex justify-between items-center">
                           <span>{client.pymeName}</span>
                           <span className={`text-xs px-2 py-1 rounded ${client.stage === "Lead" ? "bg-blue-100 text-blue-800" :
-                              client.stage === "Contactado" ? "bg-yellow-100 text-yellow-800" :
-                                client.stage === "Propuesta enviada" ? "bg-purple-100 text-purple-800" :
-                                  "bg-green-100 text-green-800"
+                            client.stage === "Contactado" ? "bg-yellow-100 text-yellow-800" :
+                              client.stage === "Propuesta enviada" ? "bg-purple-100 text-purple-800" :
+                                "bg-green-100 text-green-800"
                             }`}>
                             {client.stage}
                           </span>

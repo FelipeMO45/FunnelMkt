@@ -134,7 +134,11 @@ const CRM: React.FC = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    const { fullName, position, email, phone, pymeName, industry, employees, marketYears, website, socialNetwork, generalGoal, specificGoals, obtacles, previousAttempts, contactFrecuency } = formData;
+    const { 
+      fullName, position, email, phone, pymeName, industry, employees, 
+      marketYears, website, socialNetwork, generalGoal, specificGoals, 
+      obtacles, previousAttempts, contactFrecuency, contactMediums 
+    } = formData;
 
     if (formData.contactMediums.length === 0) {
       setContactMediumError(true);
@@ -158,7 +162,8 @@ const CRM: React.FC = () => {
       specificGoals,
       obtacles,
       previousAttempts,
-      contactFrecuency, // Ahora se envía como número
+      contactFrecuency,
+      contactMediums,
     };
 
     try {

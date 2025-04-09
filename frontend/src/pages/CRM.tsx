@@ -26,7 +26,7 @@ interface Client {
   fullName: string;
   position: string;
   email: string;
-  phone: number;
+  phone: string;
   pymeName: string;
   industry: string;
   employees: "1-10" | "11-50" | "51-200";
@@ -136,12 +136,12 @@ const CRM: React.FC = () => {
     }
 
     setContactMediumError(false);
-    
+
     const newClient = {
       fullName,
       position,
       email,
-      phone: parseInt(phone) || 0,
+      phone,
       pymeName,
       industry,
       employees,
